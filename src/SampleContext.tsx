@@ -17,8 +17,14 @@ type Action =
 
 type SampleDispatch = Dispatch<Action>;
 
-const SampleStateContext = createContext<State | null>(null);
-const SampleDispatchContext = createContext<SampleDispatch | null>(null);
+const defaultSampleState: State = {
+  count: 0,
+  text: 'hello',
+  color: 'red',
+  isGood: true,
+};
+const SampleStateContext = createContext<State>(defaultSampleState);
+const SampleDispatchContext = createContext<SampleDispatch>(() => {});
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -48,12 +54,7 @@ function reducer(state: State, action: Action): State {
 }
 
 export function SamepleProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, {
-    count: 0,
-    text: 'hello',
-    color: 'red',
-    isGood: true,
-  });
+  const [state, dispatch] = useReducer(reducer, defaultSampleState);
 
   return (
     <SampleStateContext.Provider value={state}>
@@ -64,18 +65,10 @@ export function SamepleProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function useSampleState() {
-  const state = useContext(SampleStateContext);
-  if (!state) {
-    throw new Error('Cannot find SampleProvider');
-  }
-  return state;
+export function useSampleState(): State {
+  return useContext(SampleStateContext);
 }
 
-export function useSampleDispatch() {
-  const dispatch = useContext(SampleDispatchContext);
-  if (!dispatch) {
-    throw new Error('Cannot find SampleProvider');
-  }
-  return dispatch;
+export function useSampleDispatch(): SampleDispatch {
+  return useContext(SampleDispatchContext);
 }
