@@ -1,11 +1,13 @@
 import React from 'react';
-import MyForm from './MyForm';
+import ReducerSample from './ReducerSample';
+import { SamepleProvider } from './SampleContext';
 
 function App() {
-  const onSubmit = (form: { name: string; description: string }) => {
-    console.log(form);
-  };
-  return <MyForm onSubmit={onSubmit} />;
+  return (
+    <SamepleProvider>
+      <ReducerSample />
+    </SamepleProvider>
+  );
 }
 
 export default App;
